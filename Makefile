@@ -1,4 +1,5 @@
-###############################################################################
+#_______________________________________________________________________________
+# Tools
 
 CC = i586-elf-gcc
 
@@ -8,45 +9,58 @@ LD = i586-elf-ld
 
 OBJCOPY = objcopy
 
-OINK_CC_SRCS = oink/video.c oink/ports.c oink/memsetw.c oink/intr.c \
-               oink/keyb.c oink/conio.c oink/floppy.c oink/timer.c \
-               oink/tasks.c oink/debug.c oink/descriptor.c oink/vesa.c \
-               oink/bits.c oink/libc_glue.c
+#_______________________________________________________________________________
+# Directories
 
-OINK_MAIN_SRC = oink/main.c
+DIR_SRC = src
+DIR_BOOT = $(DIR_SRC)/boot
+DIR_KRN = $(DIR_SRC)/oink
+DIR_OBJ = obj
+DIR_BIN = bin
+DIR_DEP = dep
+DIR_DBG = debug
 
+#_______________________________________________________________________________
+# Files & Extensions
+
+OINK_CC_SRCS = $(DIR_KRN)/video.c $(DIR_KRN)/ports.c $(DIR_KRN)/memsetw.c $(DIR_KRN)/intr.c \
+               $(DIR_KRN)/keyb.c $(DIR_KRN)/conio.c $(DIR_KRN)/floppy.c $(DIR_KRN)/timer.c \
+               $(DIR_KRN)/tasks.c $(DIR_KRN)/debug.c $(DIR_KRN)/descriptor.c $(DIR_KRN)/vesa.c \
+               $(DIR_KRN)/bits.c $(DIR_KRN)/libc_glue.c
+OINK_MAIN_SRC = $(DIR_KRN)/main.c
 SRCS = ${OINK_CC_SRCS} ${OINK_MAIN_SRC}
-DEPS = $(subst oink, $(DEPEND_DIR), $(SRCS:.c=.d))
-
-DEPEND_DIR = dep
-
-DEPEND_EXT = d
-
-OINK_CC_OBJS = $(subst oink, obj, $(OINK_CC_SRCS:.c=.o))
-
+DEPS = $(subst $(DIR_KRN), $(DIR_DEP), $(SRCS:.c=.d))
+OINK_CC_OBJS = $(subst $(DIR_KRN), $(DIR_OBJ), $(OINK_CC_SRCS:.c=.o))
+#OINK_CC_OBJS = $(OINK_CC_SRCS:.c=.o)
 OBJS = ${OINK_CC_OBJS} obj/main.o obj/entry.o obj/switch.o
 
-INCLUDES = -Iinclude -Ilibc/i586-elf/include -g
-#INCLUDES = -I include
+INCLUDES = -I$(DIR_SRC)/include -Ilibc/i586-elf/include -g
 
 CFLAGS = -nostdlib -fno-builtin ${INCLUDES} -Wall -std=c99
 
 LDFLAGS = -lc -Llibc/i586-elf/lib
 #LDFLAGS = -lgcc -L/lib/gcc/i686-pc-cygwin/3.4.4 -Llibc/i586-elf/
 
-###############################################################################
+LDSCRIPT = pupi.sc
+
+#_______________________________________________________________________________
+# RULES
 
 all: build install
 
-include $(DEPS)
+-include $(DEPS)
+
+dump:
+	echo $(OBJS)
+	echo $(OINK_CC_SRCS)
 
 build: bin/floppy.img
 
 install:
 
-${DEPEND_DIR}/%.${DEPEND_EXT}: oink/%.c ${DEPEND_DIR}/placeholder
+${DIR_DEP}/%.${DEPEND_EXT}: $(DIR_SRC)/%.c ${DIR_DEP}/placeholder
 	$(CC) $(CFLAGS) -MF"$@" -MG -MM -MP -MT"$@" -MT"obj/$*.o" "$<"
-# 	${CC} -MM ${INCLUDES} oink/$*.c -MF ${DEPEND_DIR}/$*.${DEPEND_EXT}
+# 	${CC} -MM ${INCLUDES} $(DIR_SRC)/$*.c -MF ${DIR_DEP}/$*.${DEPEND_EXT}
 # -MF  write the generated dependency rule to a file
 # -MG  assume missing headers will be generated and don't stop with an error
 # -MM  generate dependency rule for prerequisite, skipping system headers
@@ -55,40 +69,38 @@ ${DEPEND_DIR}/%.${DEPEND_EXT}: oink/%.c ${DEPEND_DIR}/placeholder
 
 %/placeholder:
 	mkdir $* -p
-	echo > $*/placeholder
+	touch $*/placeholder
 
-obj/entry.o: oink/entry.asm obj/placeholder debug/placeholder 
-	$(AS) -f elf32 oink/entry.asm -o $@ -l debug/entry.lst
+$(DIR_OBJ)/entry.o: $(DIR_KRN)/entry.asm $(DIR_OBJ)/placeholder $(DIR_DBG)/placeholder 
+	$(AS) -f elf32 $(DIR_KRN)/entry.asm -o $@ -l $(DIR_DBG)/entry.lst
 	
-obj/switch.o: oink/switch.asm obj/placeholder debug/placeholder
-	$(AS) -f elf32 oink/switch.asm -o $@ -l debug/switch.lst
+$(DIR_OBJ)/switch.o: $(DIR_KRN)/switch.asm $(DIR_OBJ)/placeholder $(DIR_DBG)/placeholder
+	$(AS) -f elf32 $(DIR_KRN)/switch.asm -o $@ -l $(DIR_DBG)/switch.lst
 
-obj/%.o debug/%.s: oink/%.c obj/placeholder debug/placeholder
-	$(CC) $(CFLAGS) -c oink/$*.c -o obj/$*.o
-	$(CC) $(CFLAGS) -S oink/$*.c -o debug/$*.s 
+$(DIR_OBJ)/%.o $(DIR_DBG)/%.s: $(DIR_KRN)/%.c $(DIR_OBJ)/placeholder $(DIR_DBG)/placeholder
+	$(CC) $(CFLAGS) -c $(DIR_KRN)/$*.c -o $(DIR_OBJ)/$*.o
+	$(CC) $(CFLAGS) -S $(DIR_KRN)/$*.c -o $(DIR_DBG)/$*.s 
 	
-obj/main.o: ${OINK_MAIN_SRC} obj/placeholder debug/placeholder
+$(DIR_OBJ)/main.o: ${OINK_MAIN_SRC} $(DIR_OBJ)/placeholder $(DIR_DBG)/placeholder
 	$(CC) $(CFLAGS) -c $< -o $@ -ffreestanding
-	$(CC) $(CFLAGS) -S $< -o debug/main.s -ffreestanding
+	$(CC) $(CFLAGS) -S $< -o $(DEBUG)/main.s -ffreestanding
 
-bin/idt: boot/idt.asm bin/placeholder
-	$(AS) boot/idt.asm -o bin/idt
-bin/gdt: boot/gdt.asm bin/placeholder
-	$(AS) boot/gdt.asm -o bin/gdt
+$(DIR_BIN)/idt: $(DIR_BOOT)/idt.asm $(DIR_BIN)/placeholder
+	$(AS) $(DIR_BOOT)/idt.asm -o $(DIR_BIN)/idt
+$(DIR_BIN)/gdt: $(DIR_BOOT)/gdt.asm $(DIR_BIN)/placeholder
+	$(AS) $(DIR_BOOT)/gdt.asm -o $(DIR_BIN)/gdt
 
-obj/kernel.o: ${OBJS} pupi.sc obj/placeholder debug/placeholder
-	$(LD) -T pupi.sc -M > debug/map.txt $(LDFLAGS)
+$(DIR_OBJ)/kernel.o: ${OBJS} $(LDSCRIPT) $(DIR_OBJ)/placeholder $(DIR_DBG)/placeholder
+	$(LD) -T $(LDSCRIPT) -M > debug/map.txt $(LDFLAGS)
 
-bin/kernel.img: obj/kernel.o bin/placeholder
-	$(OBJCOPY) -R .note -R .comment -S -O binary obj/kernel.o $@
+$(DIR_BIN)/kernel.img: $(DIR_OBJ)/kernel.o $(DIR_BIN)/placeholder
+	$(OBJCOPY) -R .note -R .comment -S -O binary $(DIR_OBJ)/kernel.o $@
 
-bin/floppy.img: boot/boot.asm bin/kernel.img bin bin/idt bin/gdt debug/placeholder
-	$(AS) boot/boot.asm -o $@ -l debug/boot.lst
+$(DIR_BIN)/floppy.img: $(DIR_BOOT)/boot.asm $(DIR_BIN)/kernel.img $(DIR_BIN) $(DIR_BIN)/idt $(DIR_BIN)/gdt $(DIR_DBG)/placeholder
+	$(AS) $(DIR_BOOT)/boot.asm -o $@ -l $(DIR_DBG)/boot.lst
 
 clean:
-	rm -fR dep
-	rm -fR obj
-	rm -fR bin
-	rm -fR debug
-
-###############################################################################
+	rm -fR $(DIR_DEP)
+	rm -fR $(DIR_OBJ)
+	rm -fR $(DIR_BIN)
+	rm -fR $(DIR_DBG)
