@@ -34,7 +34,7 @@ OINK_CC_OBJS = $(subst $(DIR_KRN), $(DIR_OBJ), $(OINK_CC_SRCS:.c=.o))
 #OINK_CC_OBJS = $(OINK_CC_SRCS:.c=.o)
 OBJS = ${OINK_CC_OBJS} obj/main.o obj/entry.o obj/switch.o
 
-INCLUDES = -I$(DIR_SRC)/include -Ilibc/i586-elf/include -g
+INCLUDES = -I$(DIR_SRC)/include -I$(DIR_LIBC)/include -g
 
 CFLAGS = -nostdlib -fno-builtin ${INCLUDES} -Wall -std=c99
 
@@ -49,6 +49,7 @@ LDSCRIPT = pupi.sc
 all: build install
 
 -include $(DEPS)
+-include local.mk
 
 dump:
 	echo $(OBJS)
