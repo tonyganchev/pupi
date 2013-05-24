@@ -108,5 +108,5 @@ void kgets(char *s)
 		while (c != 13);
 		s[l] = '\0';
 	}
-	cputs("\n\r");
+	kputs("\n\r");
 }

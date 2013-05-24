@@ -1,7 +1,9 @@
 #_______________________________________________________________________________
 # Tools
 
-CC = i586-elf-gcc
+ARCH = i586-elf
+
+CC = gcc
 
 AS = nasm
 
@@ -34,11 +36,11 @@ OINK_CC_OBJS = $(subst $(DIR_KRN), $(DIR_OBJ), $(OINK_CC_SRCS:.c=.o))
 #OINK_CC_OBJS = $(OINK_CC_SRCS:.c=.o)
 OBJS = ${OINK_CC_OBJS} obj/main.o obj/entry.o obj/switch.o
 
-INCLUDES = -I$(DIR_SRC)/include -I$(DIR_LIBC)/include -g
+INCLUDES = -I$(DIR_SRC)/include -Inewlib/$(ARCH)/include -g
 
-CFLAGS = -nostdlib -fno-builtin ${INCLUDES} -Wall -std=c99
+CFLAGS = -b $(ARCH) -nostdlib -fno-builtin ${INCLUDES} -Wall -std=c99
 
-LDFLAGS = -lc -Llibc/i586-elf/lib
+LDFLAGS = -lc -Lnewlib/$(ARCH)/lib
 #LDFLAGS = -lgcc -L/lib/gcc/i686-pc-cygwin/3.4.4 -Llibc/i586-elf/
 
 LDSCRIPT = pupi.sc
@@ -84,7 +86,7 @@ $(DIR_OBJ)/%.o $(DIR_DBG)/%.s: $(DIR_KRN)/%.c $(DIR_OBJ)/placeholder $(DIR_DBG)/
 	
 $(DIR_OBJ)/main.o: ${OINK_MAIN_SRC} $(DIR_OBJ)/placeholder $(DIR_DBG)/placeholder
 	$(CC) $(CFLAGS) -c $< -o $@ -ffreestanding
-	$(CC) $(CFLAGS) -S $< -o $(DEBUG)/main.s -ffreestanding
+	$(CC) $(CFLAGS) -S $< -o $(DIR_DBG)/main.s -ffreestanding
 
 $(DIR_BIN)/idt: $(DIR_BOOT)/idt.asm $(DIR_BIN)/placeholder
 	$(AS) $(DIR_BOOT)/idt.asm -o $(DIR_BIN)/idt

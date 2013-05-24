@@ -13,7 +13,7 @@
 static void ih_div_zero()
 {
 	START_INTERRUPT();
-	cputs("DIVISION BY ZERO\r\n");
+	kputs("DIVISION BY ZERO\r\n");
 	__asm__ __volatile__("hlt");
 	END_INTERRUPT();
 }
@@ -21,7 +21,7 @@ static void ih_div_zero()
 static void ih_debugger()
 {
 	START_INTERRUPT();
-	cputs("DEBUGGER\r\n");
+	kputs("DEBUGGER\r\n");
 	__asm__ __volatile__("hlt");
 	END_INTERRUPT();
 }
@@ -29,7 +29,7 @@ static void ih_debugger()
 static void ih_nmi()
 {
 	START_INTERRUPT();
-	cputs("NMI\r\n");
+	kputs("NMI\r\n");
 	__asm__ __volatile__("hlt");
 	END_INTERRUPT();
 }
@@ -37,7 +37,7 @@ static void ih_nmi()
 static void ih_breakpoint()
 {
 	START_INTERRUPT();
-	cputs("BREAKPOINT\r\n");
+	kputs("BREAKPOINT\r\n");
 	__asm__ __volatile__("hlt");
 	END_INTERRUPT();
 }
@@ -45,7 +45,7 @@ static void ih_breakpoint()
 static void ih_overflow()
 {
 	START_INTERRUPT();
-	cputs("OVERFLOW\r\n");
+	kputs("OVERFLOW\r\n");
 	__asm__ __volatile__("hlt");
 	END_INTERRUPT();
 }
@@ -53,7 +53,7 @@ static void ih_overflow()
 static void ih_bounds()
 {
 	START_INTERRUPT();
-	cputs("BOUNDS\r\n");
+	kputs("BOUNDS\r\n");
 	__asm__ __volatile__("hlt");
 	END_INTERRUPT();
 }
@@ -61,7 +61,7 @@ static void ih_bounds()
 static void ih_invalid_opcode()
 {
 	START_INTERRUPT();
-	cputs("INVALID OPCODE\r\n");
+	kputs("INVALID OPCODE\r\n");
 	__asm__ __volatile__("hlt");
 	END_INTERRUPT();
 }
@@ -69,7 +69,7 @@ static void ih_invalid_opcode()
 static void ih_coproc_na()
 {
 	START_INTERRUPT();
-	cputs("COPROCESSOR N/A\r\n");
+	kputs("COPROCESSOR N/A\r\n");
 	__asm__ __volatile__("hlt");
 	END_INTERRUPT();
 }
@@ -77,7 +77,7 @@ static void ih_coproc_na()
 static void ih_df()
 {
 	START_INTERRUPT();
-	cputs("DOUBLE FAULT\r\n");
+	kputs("DOUBLE FAULT\r\n");
 	__asm__ __volatile__("hlt");
 	END_INTERRUPT();
 }
@@ -85,7 +85,7 @@ static void ih_df()
 static void ih_coproc_seg_overrun()
 {
 	START_INTERRUPT();
-	cputs("COPROCESSOR SEGMENT OVERRUN\r\n");
+	kputs("COPROCESSOR SEGMENT OVERRUN\r\n");
 	__asm__ __volatile__("hlt");
 	END_INTERRUPT();
 }
@@ -93,7 +93,7 @@ static void ih_coproc_seg_overrun()
 static void ih_invalid_tss()
 {
 	START_INTERRUPT();
-	cputs("INVALID TSS\r\n");
+	kputs("INVALID TSS\r\n");
 	__asm__ __volatile__("hlt");
 	END_INTERRUPT();
 }
@@ -101,7 +101,7 @@ static void ih_invalid_tss()
 static void ih_seg_not_present()
 {
 	START_INTERRUPT();
-	cputs("SEGMENT NOT PRESENT\r\n");
+	kputs("SEGMENT NOT PRESENT\r\n");
 	__asm__ __volatile__("hlt");
 	END_INTERRUPT();
 }
@@ -109,7 +109,7 @@ static void ih_seg_not_present()
 static void ih_sf()
 {
 	START_INTERRUPT();
-	cputs("STACK FAULT\r\n");
+	kputs("STACK FAULT\r\n");
 	__asm__ __volatile__("hlt");
 	END_INTERRUPT();
 }
@@ -118,7 +118,7 @@ static void ih_gpf()
 {
 	START_INTERRUPT();
 	char_attr_set(0x0C);
-	cputs("GENERAL PROTECTION FAULT\r\n");
+	kputs("GENERAL PROTECTION FAULT\r\n");
 	__asm__ __volatile__("hlt");
 	END_INTERRUPT();
 }
@@ -126,7 +126,7 @@ static void ih_gpf()
 static void ih_pf()
 {
 	START_INTERRUPT();
-	cputs("PAGE FAULT\r\n");
+	kputs("PAGE FAULT\r\n");
 	__asm__ __volatile__("hlt");
 	END_INTERRUPT();
 }
@@ -134,7 +134,7 @@ static void ih_pf()
 static void ih_empty()
 {
 	START_INTERRUPT();
-	cputs("UNHANDLED EXCEPTION\r\n");
+	kputs("UNHANDLED EXCEPTION\r\n");
 	//__asm__ __volatile__("hlt");
 	END_INTERRUPT();
 }
@@ -142,7 +142,7 @@ static void ih_empty()
 static void ih_math_fault()
 {
 	START_INTERRUPT();
-	cputs("MATH FAULT\r\n");
+	kputs("MATH FAULT\r\n");
 	__asm__ __volatile__("hlt");
 	END_INTERRUPT();
 }
@@ -150,7 +150,7 @@ static void ih_math_fault()
 static void ih_align_check()
 {
 	START_INTERRUPT();
-	cputs("ALIGNMENT CHECK\r\n");
+	kputs("ALIGNMENT CHECK\r\n");
 	__asm__ __volatile__("hlt");
 	END_INTERRUPT();
 }
@@ -158,7 +158,7 @@ static void ih_align_check()
 static void ih_machine_check()
 {
 	START_INTERRUPT();
-	cputs("MACHINE CHECK\r\n");
+	kputs("MACHINE CHECK\r\n");
 	__asm__ __volatile__("hlt");
 	END_INTERRUPT();
 }
@@ -166,7 +166,7 @@ static void ih_machine_check()
 static void ih_simd_float_ex()
 {
 	START_INTERRUPT();
-	cputs("SIMD FLOATING-POINT EXCEPTION\r\n");
+	kputs("SIMD FLOATING-POINT EXCEPTION\r\n");
 	__asm__ __volatile__("hlt");
 	END_INTERRUPT();
 }
@@ -214,13 +214,13 @@ int main()
 	//tasksInit();
 	intr_enable();
 
-	cputs("ssss\n");
+	kputs("ssss\n");
 //
 	char buffer[20];
-	strcmp("PESHO", "PESHO");
+//	strcmp("PESHO", "PESHO");
 //	ltoa(strcmp("PESHO", "PESHO"), buffer);
 //
-//	cputs(buffer);
+//	kputs(buffer);
 
 	for (;;)
 		;

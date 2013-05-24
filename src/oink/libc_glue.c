@@ -182,13 +182,13 @@ caddr_t sbrk(int incr)
 	}
 	prev_heap_end = heap_end;
 
-	void* stack_p;
+	/*void* stack_p;
 	__asm__ __volatile__ ("inl %%esp, %0" : "=a" (stack_p));
 	if (heap_end + incr > (char *)stack_p)
 	{
 		_write(1, "Heap and stack collision\n", 25);
 		abort();
-	}
+	}*/
 
 	heap_end += incr;
 	return (caddr_t) prev_heap_end;

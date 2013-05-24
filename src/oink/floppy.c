@@ -193,9 +193,9 @@ void floppy_init(void)
 	i = receive_byte();
 
 	if (i == 0x80)
-		cputs("NEC765 controller found\r\n");
+		kputs("NEC765 controller found\r\n");
 	else
-		cputs("enhanced controller found\r\n");
+		kputs("enhanced controller found\r\n");
 }
 
 
