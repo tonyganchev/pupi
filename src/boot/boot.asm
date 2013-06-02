@@ -16,6 +16,9 @@ bits 16
 	;-----------------------------------------------------------------
 	call	enableA20
 	;-----------------------------------------------------------------
+	; TEMP: remove when no-longer necessary.
+	hlt
+	;-----------------------------------------------------------------
 	mov	ax, 0x0600		; Clear screen
 	xor	cx, cx
 	mov	dx, 0x194F
@@ -50,8 +53,15 @@ bits 16
 	; !!!!!!!!!!!
 
 	mov	ax, 0x0003
-	mov	bx, 0x0021
+	mov	bx, 0x0082		; Loading sectors #0x03-0x82 in 2000:0000 -> 0x20000
 	mov	cx, 0x2000
+	mov	es, cx
+	mov	cx, 0x0000
+	call	loadSectors
+
+	mov	ax, 0x0083
+	mov	bx, 0x00102		; Loading sectors #0x83-0x102 in 3000:0000 -> 0x30000
+	mov	cx, 0x3000
 	mov	es, cx
 	mov	cx, 0x0000
 	call	loadSectors
@@ -440,8 +450,8 @@ loadSectors_readBegin:
 
 	jnc	loadSectors_readEnd
 
-	mov	ah, 0x00	; BIOS InitFloppy
-	mov	dl, 0x00
+	mov	ah, 0x01	; BIOS GetIOStatus
+	mov	dl, 0x00	; drive
 	int	0x13
 
 	pop	cx
@@ -482,4 +492,4 @@ times 510-($-$$)	db 0	; Fill bytes from present loc to 510 with 0s
 ; ... Add fourth and so on
 	incbin	'bin/kernel.img'
 
-times 2880 * 512-($-$$)	db 0
+times 2880 * 512-($-$$)	db 13

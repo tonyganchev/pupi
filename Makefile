@@ -97,7 +97,7 @@ $(DIR_OBJ)/kernel.o: ${OBJS} $(LDSCRIPT) $(DIR_OBJ)/placeholder $(DIR_DBG)/place
 	$(LD) -T $(LDSCRIPT) -M > debug/map.txt $(LDFLAGS)
 
 $(DIR_BIN)/kernel.img: $(DIR_OBJ)/kernel.o $(DIR_BIN)/placeholder
-	$(OBJCOPY) -R .note -R .comment -S -O binary $(DIR_OBJ)/kernel.o $@
+	$(OBJCOPY) -R .note -R .comment -O binary $(DIR_OBJ)/kernel.o $@
 
 $(DIR_BIN)/floppy.img: $(DIR_BOOT)/boot.asm $(DIR_BIN)/kernel.img $(DIR_BIN) $(DIR_BIN)/idt $(DIR_BIN)/gdt $(DIR_DBG)/placeholder
 	$(AS) $(DIR_BOOT)/boot.asm -o $@ -l $(DIR_DBG)/boot.lst
