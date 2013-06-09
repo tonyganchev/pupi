@@ -1,14 +1,10 @@
 #!/usr/bin/bash
-export GCC_VER=4.4.7
-export BINUTILS_VER=2.20.1
-export PREFIX=`pwd`/cross
-export TARGET=i586-elf
-export HOME_DIR=`pwd`
+source config.sh
 
 echo == Creating build directory ==================================================
 
-if [ ! -d build ]; then
-	mkdir build
+if [ ! -d $HOME_DIR/build ]; then
+	mkdir $HOME_DIR/build
 fi
 
 cd $HOME_DIR/build
@@ -24,10 +20,10 @@ fi
 
 echo == Configuring GCC ===========================================================
 
-if [ ! -d build-gcc ]; then
-	mkdir build-gcc
+if [ ! -d $HOME_DIR/build/build-gcc ]; then
+	mkdir $HOME_DIR/build/build-gcc
 fi
-cd build-gcc
+cd $HOME_DIR/build/build-gcc
 export PATH=$PATH:$PREFIX/bin
 ../gcc-$GCC_VER/configure --target=$TARGET --prefix=$PREFIX --disable-nls \
     --enable-languages=c,c++ --without-headers
