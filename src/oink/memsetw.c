@@ -1,5 +1,5 @@
-#include <types.h>
-#include <string.h>
+#include "types.h"
+#include "string.h"
 
 //void ltoa(long l, char *dest);
 //void utox(DWORD u, char *dest, BYTE digits);

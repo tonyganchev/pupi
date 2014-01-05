@@ -1,6 +1,8 @@
 #ifndef INTR_DEF_H
 #  define INTR_DEF_H
 
+#include "types.h"
+
 /*
  +----------------------------------------------------------------------------+
  | Defines                                                                    |

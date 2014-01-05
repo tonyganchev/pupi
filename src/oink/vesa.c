@@ -1,6 +1,6 @@
-#include <types.h>
-#include <bits.h>
-#include <ports.h>
+#include "types.h"
+#include "bits.h"
+#include "ports.h"
 
 enum VGAREG
 {
@@ -126,14 +126,14 @@ enum VGAREGIDXCRTC
 	VGAREGIDXCRTC_LINE_COMPARE = 0x18
 };
 
-static inline byte vga_register_read(word reg, byte regIdx)
-{
-	byte addr = inportb(reg);
-	outportb(reg, regIdx);
-	word addrData = inportw(reg);
-	outportb(reg, addr);
-	return byte_lo(addrData);
-}
+//static inline byte vga_register_read(word reg, byte regIdx)
+//{
+//	byte addr = inportb(reg);
+//	outportb(reg, regIdx);
+//	word addrData = inportw(reg);
+//	outportb(reg, addr);
+//	return byte_lo(addrData);
+//}
 
 static inline void vga_reg_write(word reg, byte regIdx, byte data)
 {

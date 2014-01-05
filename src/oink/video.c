@@ -1,9 +1,9 @@
-#include <types.h>
-#include <string.h>
-#include <format.h>
-#include <ports.h>
+#include "types.h"
+#include "string.h"
+#include "format.h"
+#include "ports.h"
 
-
+#include <stddef.h>
 
 #define TEXT_COLUMNS	80
 #define	TEXT_ROWS	25
@@ -92,37 +92,37 @@ void print_byte(byte x, byte y, byte u, byte attr)
 
 byte char_attr_at(byte x, byte y)
 {
-	VRAM videoMemory = video_ram_address();
-	return videoMemory[(y * TEXT_COLUMNS + x) * 2 + 1];
+	VRAM video_memory = video_ram_address();
+	return video_memory[(y * TEXT_COLUMNS + x) * 2 + 1];
 }
 
-
+extern void *memsetw(void *dest, word val, int count);
 
 void scroll_up(byte attr)
 {
-	VRAM videoMemory = video_ram_address();
+	VRAM video_memory = video_ram_address();
 
-	memcpy(videoMemory, videoMemory + 160, 3840);
-	memsetw((word *)videoMemory + 1920, attr << 8 | ' ', 80);
+	memcpy(video_memory, video_memory + 160, 3840);
+	memsetw((word *)video_memory + 1920, attr << 8 | ' ', 80);
 }
 
 
 
 void scroll_down(byte attr)
 {
-	VRAM videoMemory = video_ram_address();
+	VRAM video_memory = video_ram_address();
 
-	memcpy(videoMemory + 160, videoMemory, 3840);
-	memsetw((word *)videoMemory, attr << 8 | ' ', 80);
+	memcpy(video_memory + 160, video_memory, 3840);
+	memsetw((word *)video_memory, attr << 8 | ' ', 80);
 }
 
 
 
 void clear_screen(byte attr)
 {
-	VRAM videoMemory = video_ram_address();
+	VRAM video_memory = video_ram_address();
 
-	memsetw((word *)videoMemory, attr << 8 | ' ', 2000);
+	memsetw((word *)video_memory, attr << 8 | ' ', 2000);
 }
 
 

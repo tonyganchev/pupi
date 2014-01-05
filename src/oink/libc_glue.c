@@ -2,12 +2,12 @@
  * \file Glue functions needed to port newlib C
  */
 
-#include <types.h>
-#include <conio.h>
+#include "types.h"
+#include "conio.h"
 
 #include <sys/stat.h>
 
-#include <errno.h>
+#include "errno.h"
 #undef errno
 extern int errno;
 

@@ -9,8 +9,12 @@
 #ifndef INTR_H
 #	define INTR_H
 
+#include "types.h"
 #include "bits.h"
-#include "../oink/intr_def.h"
+#include "descriptor.h"
+#include "intr_def.h"
+
+typedef void (*INTRHANDLER)();
 
 /*
  +----------------------------------------------------------------------------+
@@ -47,11 +51,9 @@
  +----------------------------------------------------------------------------+
  */
 
-extern void intr_enable();
-extern void intr_disable();
-extern void intr_set_indir(INTERRUPTVECTOR intr_no, const INTERRUPT* desc);
-extern void intr_get_indir(INTERRUPTVECTOR intr_no, INTERRUPT *desc);
-extern void intr_set(
+void intr_enable();
+void intr_disable();
+void intr_set(
 		const INTERRUPTVECTOR intr_no,
 		const INTRHANDLER func,
 		const word selector,

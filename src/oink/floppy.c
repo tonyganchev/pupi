@@ -1,7 +1,7 @@
-#include <types.h>
-#include <ports.h>
-#include <intr.h>
-#include <conio.h>
+#include "types.h"
+#include "ports.h"
+#include "intr.h"
+#include "conio.h"
 #include <string.h>
 
 /*
@@ -67,19 +67,19 @@ typedef struct DRIVEGEOMETRY_
 +----------------------------------------------------------------------------+
 */
 
-volatile bool done = false;
-bool dchange = false;
-bool motor = false;
-int mtick = 0;
-volatile int tmout = 0;
-byte status[7] = { 0 };
-byte statsz = 0;
-byte sr0 = 0;
-byte fdc_track = 0xFF;
-DRIVEGEOMETRY geometry = { DG144_HEADS, DG144_TRACKS, DG144_SPT };
-int tbaddr = 0x80000L; /* transfer buffer address */
+static volatile bool done = false;
+static bool dchange = false;
+static bool motor = false;
+static int mtick = 0;
+static volatile int tmout = 0;
+static byte status[7] = { 0 };
+static byte statsz = 0;
+static byte sr0 = 0;
+static byte fdc_track = 0xFF;
+static DRIVEGEOMETRY geometry = { DG144_HEADS, DG144_TRACKS, DG144_SPT };
+static int tbaddr = 0x80000L; /* transfer buffer address */
 /* definition of DMA channels */
-const DMACHANNEL dmainfo[] = {
+static const DMACHANNEL dmainfo[] = {
 	{ 0x87, 0x00, 0x01 },
 	{ 0x83, 0x02, 0x03 },
 	{ 0x81, 0x04, 0x05 },
@@ -108,12 +108,12 @@ static int  receive_byte();
 static bool wait_controller(bool sensei);
 static void block2hts(int block, int *head, int *track, int *sector);
 static void reset(void);
-static bool disk_changed(void);
+//static bool disk_changed(void);
 static void motor_on(void);
 static void motor_off(void);
 static void recalibrate(void);
 static bool seek(int track);
-static bool log_disk(DRIVEGEOMETRY *g);
+//static bool log_disk(DRIVEGEOMETRY *g);
 static void ih_floppy(void);
 
 /*
@@ -364,10 +364,10 @@ void reset(void)
 
 
 /* this returns whether there was a disk change */
-bool disk_changed(void)
-{
-	return dchange;
-}
+//bool disk_changed(void)
+//{
+//	return dchange;
+//}
 
 
 
@@ -443,7 +443,6 @@ bool seek(int track)
 }
 
 
-
 /* checks drive geometry - call this after any disk change */
 bool log_disk(DRIVEGEOMETRY *g)
 {
@@ -487,7 +486,6 @@ bool log_disk(DRIVEGEOMETRY *g)
 	/* it's not 1.44M or 1.68M - we don't support it */
 	return false;
 }
-
 
 
 /* read block (blockbuff is 512 byte buffer) */

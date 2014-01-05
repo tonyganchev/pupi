@@ -1,5 +1,6 @@
-#include <config.h>
-#include <ports.h>
+#include "config.h"
+#include "types.h"
+#include "ports.h"
 
 #define BOCHS_PORT_CMD  0x8A00
 #define BOCHS_PORT_DATA 0x8A01

@@ -1,7 +1,7 @@
-#include <types.h>
-#include <video.h>
-#include <ports.h>
-#include <intr.h>
+#include "types.h"
+#include "video.h"
+#include "ports.h"
+#include "intr.h"
 
 #define SHIFT_PRESSED   0x01
 #define CTRL_PRESSED    0x02

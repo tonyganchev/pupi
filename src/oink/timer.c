@@ -1,6 +1,6 @@
-#include <types.h>
-#include <intr.h>
-#include <tasks.h>
+#include "types.h"
+#include "intr.h"
+#include "tasks.h"
 
 #define SWITCH_TICKS 20
 

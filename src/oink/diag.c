@@ -1,7 +1,7 @@
 #include <diag.h>
 #include <descriptor.h>
 
-void descriptor_dump(const byte *descTable, const word descNo)
+void descriptor_dump(const kbyte *descTable, const word descNo)
 {
 	DESCRIPTOR desc;
 	descriptor_get(descTable, descNo, &desc);

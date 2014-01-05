@@ -1,13 +1,13 @@
-#include <types.h>
-#include <ports.h>
-#include <video.h>
-#include <conio.h>
-#include <format.h>
-#include <string.h>
-#include <timer.h>
-#include <intr.h>
-#include <keyb.h>
-#include <descriptor.h>
+#include "types.h"
+#include "ports.h"
+#include "video.h"
+#include "conio.h"
+#include "format.h"
+#include "string.h"
+#include "timer.h"
+#include "intr.h"
+#include "keyb.h"
+#include "descriptor.h"
 //#include "intr_def.h"
 
 static void ih_div_zero()
@@ -203,7 +203,7 @@ static void intr_init()
 	intr_set(0x21, ih_keyboard, 8, DA_KRNINTR);
 }
 
-extern word taskCount;
+//extern word taskCount;
 
 int main()
 {
@@ -216,7 +216,7 @@ int main()
 
 	kputs("ssss\n");
 //
-	char buffer[20];
+//	char buffer[20];
 //	strcmp("PESHO", "PESHO");
 //	ltoa(strcmp("PESHO", "PESHO"), buffer);
 //
@@ -228,9 +228,4 @@ int main()
 	return 0;
 }
 
-int __main()
-{
-	main();
-	return 0;
-}
 

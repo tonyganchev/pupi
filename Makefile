@@ -36,9 +36,9 @@ OINK_CC_OBJS = $(subst $(DIR_KRN), $(DIR_OBJ), $(OINK_CC_SRCS:.c=.o))
 #OINK_CC_OBJS = $(OINK_CC_SRCS:.c=.o)
 OBJS = ${OINK_CC_OBJS} obj/main.o obj/entry.o obj/switch.o
 
-INCLUDES = -I$(DIR_SRC)/include -Inewlib/$(ARCH)/include -g
+INCLUDES = -nostdinc -Isrc/include -Inewlib/$(ARCH)/include
 
-CFLAGS = -b $(ARCH) -nostdlib -fno-builtin ${INCLUDES} -Wall -std=c99
+CFLAGS = -b $(ARCH) -nostdlib -fno-builtin ${INCLUDES} -Wall -std=c99 -g
 
 LDFLAGS = -lc -Lnewlib/$(ARCH)/lib
 #LDFLAGS = -lgcc -L/lib/gcc/i686-pc-cygwin/3.4.4 -Llibc/i586-elf/
@@ -61,7 +61,7 @@ build: bin/floppy.img
 
 install:
 
-${DIR_DEP}/%.${DEPEND_EXT}: $(DIR_SRC)/%.c ${DIR_DEP}/placeholder
+${DIR_DEP}/%.d: $(DIR_SRC)/%.c ${DIR_DEP}/placeholder
 	$(CC) $(CFLAGS) -MF"$@" -MG -MM -MP -MT"$@" -MT"obj/$*.o" "$<"
 # 	${CC} -MM ${INCLUDES} $(DIR_SRC)/$*.c -MF ${DIR_DEP}/$*.${DEPEND_EXT}
 # -MF  write the generated dependency rule to a file

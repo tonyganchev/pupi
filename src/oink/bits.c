@@ -1,4 +1,4 @@
-#include <bits.h>
+#include "types.h"
 
 byte byte_lo(word w) {
 	return (byte) w;
