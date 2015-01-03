@@ -9,6 +9,9 @@
 #include "keyb.h"
 #include "descriptor.h"
 //#include "intr_def.h"
+#include <malloc.h>
+#include <stdio.h>
+#include <string.h>
 
 static void ih_div_zero()
 {
@@ -214,13 +217,13 @@ int main()
 	//tasksInit();
 	intr_enable();
 
-	kputs("ssss\n");
-//
-//	char buffer[20];
-//	strcmp("PESHO", "PESHO");
-//	ltoa(strcmp("PESHO", "PESHO"), buffer);
-//
-//	kputs(buffer);
+	cursor_move(0, 0);
+
+	char *foo = (char *)malloc(11);
+	strncpy(foo, "JaMKSS", 10);
+
+	kputs(foo);
+	free(foo);
 
 	for (;;)
 		;

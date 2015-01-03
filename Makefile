@@ -36,7 +36,7 @@ OINK_CC_OBJS = $(subst $(DIR_KRN), $(DIR_OBJ), $(OINK_CC_SRCS:.c=.o))
 #OINK_CC_OBJS = $(OINK_CC_SRCS:.c=.o)
 OBJS = ${OINK_CC_OBJS} obj/main.o obj/entry.o obj/switch.o
 
-INCLUDES = -nostdinc -Isrc/include -Inewlib/$(ARCH)/include
+INCLUDES =  -Inewlib/$(ARCH)/include
 
 CFLAGS = -b $(ARCH) -nostdlib -fno-builtin ${INCLUDES} -Wall -std=c99 -g
 
@@ -48,20 +48,27 @@ LDSCRIPT = pupi.sc
 #_______________________________________________________________________________
 # RULES
 
+.PHONY: all
 all: build install
 
 -include $(DEPS)
 -include local.mk
 
+.PHONY: dump
 dump:
-	echo $(OBJS)
-	echo $(OINK_CC_SRCS)
-
+	@ echo ---------------------------------------------------------------------
+	@ echo DEPS: $(DEPS)
+	@ echo ---------------------------------------------------------------------
+	@ echo OBJS: $(OBJS)
+	@ echo ---------------------------------------------------------------------
+	
+.PHONY: build
 build: bin/floppy.img
 
+.PHONY: install
 install:
 
-${DIR_DEP}/%.d: $(DIR_SRC)/%.c ${DIR_DEP}/placeholder
+${DIR_DEP}/%.d: $(DIR_KRN)/%.c ${DIR_DEP}/placeholder
 	$(CC) $(CFLAGS) -MF"$@" -MG -MM -MP -MT"$@" -MT"obj/$*.o" "$<"
 # 	${CC} -MM ${INCLUDES} $(DIR_SRC)/$*.c -MF ${DIR_DEP}/$*.${DEPEND_EXT}
 # -MF  write the generated dependency rule to a file
@@ -97,11 +104,13 @@ $(DIR_OBJ)/kernel.o: ${OBJS} $(LDSCRIPT) $(DIR_OBJ)/placeholder $(DIR_DBG)/place
 	$(LD) -T $(LDSCRIPT) -M > debug/map.txt $(LDFLAGS)
 
 $(DIR_BIN)/kernel.img: $(DIR_OBJ)/kernel.o $(DIR_BIN)/placeholder
+	$(OBJCOPY) --only-keep-debug $(DIR_OBJ)/kernel.o $(DIR_DBG)/kernel.sym
 	$(OBJCOPY) -R .note -R .comment -O binary $(DIR_OBJ)/kernel.o $@
 
 $(DIR_BIN)/floppy.img: $(DIR_BOOT)/boot.asm $(DIR_BIN)/kernel.img $(DIR_BIN) $(DIR_BIN)/idt $(DIR_BIN)/gdt $(DIR_DBG)/placeholder
 	$(AS) $(DIR_BOOT)/boot.asm -o $@ -l $(DIR_DBG)/boot.lst
 
+.PHONY: clean
 clean:
 	rm -fR $(DIR_DEP)
 	rm -fR $(DIR_OBJ)
